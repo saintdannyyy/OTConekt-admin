@@ -26,20 +26,20 @@ AS $$
     tp.id as therapist_id,
     tp.user_id,
     tp.bio,
-    tp.specialties,
+    tp.specialties,  -- Note: schema shows this as ARRAY (text[])
     tp.credentials,
     tp.experience_years,
-    tp.availability,
-    tp.hourly_rate,
+    tp.availability, -- Note: schema shows this as jsonb
+    tp.hourly_rate,  -- Note: schema shows this as numeric
     tp.is_approved,
     tp.created_at,
     tp.updated_at,
-    u.name,
+    u.name,         -- Note: schema shows this as text NOT NULL
     u.email,
     u.phone,
-    u.photo_url,
+    u.photo_url,    -- Note: schema shows this as text
     u.location,
-    u.role
+    u.role::text    -- Note: schema shows this as USER-DEFINED type
   FROM therapist_profiles tp
   INNER JOIN users u ON tp.user_id = u.id
   ORDER BY tp.created_at DESC;
