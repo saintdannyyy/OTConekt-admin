@@ -61,13 +61,13 @@ export interface AdminTherapistProfile {
 export interface User {
   id: string
   email: string
-  name: string
+  name: string              // NOT NULL in actual schema
   role: 'client' | 'therapist'
-  condition?: string
-  specialty?: string
-  phone?: string
-  photo_url?: string
-  location?: string
+  condition?: string        // Optional field in schema
+  specialty?: string        // Optional field in schema 
+  phone?: string            // Optional field in schema
+  photo_url?: string        // Optional field in schema
+  location?: string         // Optional field in schema
   created_at: string
   updated_at: string
 }

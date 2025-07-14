@@ -51,6 +51,8 @@ function UsersPageContent() {
       }
 
       console.log('Users fetched successfully:', data?.length || 0)
+      
+      // Data should already match the schema - no transformation needed
       setUsers(data || [])
     } catch (error) {
       console.error('Error fetching users:', error)

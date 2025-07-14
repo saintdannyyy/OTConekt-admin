@@ -1,24 +1,24 @@
 import { supabaseAdmin } from '@/lib/supabase'
 
-// Raw response type from the RPC function
+// Raw response type from the RPC function (matching actual database schema)
 export interface RawTherapistResponse {
   therapist_id: string
   user_id: string
   bio: string | null
-  specialties: string[] | null
+  specialties: string[] | null  // ARRAY type in schema
   credentials: string | null
   experience_years: number | null
-  availability: any | null
-  hourly_rate: number | null
+  availability: any | null      // jsonb type in schema
+  hourly_rate: number | null    // numeric type in schema
   is_approved: boolean
   created_at: string
   updated_at: string
-  name: string | null
+  name: string                  // NOT NULL in schema
   email: string | null
   phone: string | null
-  photo_url: string | null
+  photo_url: string | null      // text type in schema
   location: string | null
-  role: string | null
+  role: string                  // USER-DEFINED type in schema
 }
 
 // Enhanced TherapistProfile type for admin dashboard
@@ -118,35 +118,35 @@ export class TherapistService {
 
           // Create merged object with all necessary data
           const enrichedTherapist: AdminTherapistProfile = {
-            // Therapist profile data
+            // Therapist profile data (matching actual schema)
             id: therapist.therapist_id,
             user_id: therapist.user_id,
             bio: therapist.bio || '',
-            specialties: therapist.specialties || [],
-            credentials: therapist.credentials || '',
+            specialties: therapist.specialties || [],      // Already text[] in schema
+            credentials: therapist.credentials || '',       // Already text in schema
             experience_years: therapist.experience_years || 0,
-            availability: therapist.availability || [],
-            hourly_rate: therapist.hourly_rate?.toString() || '0',
+            availability: therapist.availability || [],     // Already jsonb in schema
+            hourly_rate: therapist.hourly_rate?.toString() || '0', // Already numeric in schema
             is_approved: therapist.is_approved || false,
             created_at: therapist.created_at || new Date().toISOString(),
             updated_at: therapist.updated_at || new Date().toISOString(),
 
-            // User data (flattened for easier access)
-            name: therapist.name || 'Licensed Therapist',
+            // User data (using actual schema field names)
+            name: therapist.name || 'Licensed Therapist',   // name field exists in schema
             email: therapist.email || '',
             phone: therapist.phone || null,
-            photo_url: therapist.photo_url || null,
-            location: therapist.location || null,
+            photo_url: therapist.photo_url || null,         // photo_url field exists in schema
+            location: therapist.location || null,           // location field exists in schema
             role: therapist.role || 'therapist',
 
             // Nested user object for backward compatibility
             users: {
               id: therapist.user_id,
-              name: therapist.name || 'Unknown',
+              name: therapist.name || 'Unknown',             // name field exists in schema
               email: therapist.email || '',
               phone: therapist.phone || null,
-              photo_url: therapist.photo_url || null,
-              location: therapist.location || null,
+              photo_url: therapist.photo_url || null,        // photo_url field exists in schema
+              location: therapist.location || null,          // location field exists in schema
               role: therapist.role || 'therapist'
             }
           }
