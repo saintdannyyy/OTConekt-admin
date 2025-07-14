@@ -65,9 +65,9 @@ export class TherapistService {
       console.log('🔄 Starting admin therapist data fetch at:', new Date().toISOString())
 
       // STEP 1: Fetch all therapist profiles with user data using SQL JOIN
-      console.log('📋 Fetching all therapist profiles with user data via get_all_therapists...')
+      console.log('📋 Fetching all therapist profiles with user data via getadmin_all_therapists...')
       const { data: therapistProfiles, error: queryError } = await supabaseAdmin
-        .rpc('get_all_therapists', {})
+        .rpc('getadmin_all_therapists', {})
 
       if (queryError) {
         console.error('❌ Therapist profiles fetch error:', JSON.stringify(queryError, null, 2))
