@@ -7,21 +7,8 @@ import DashboardLayout from '@/components/DashboardLayout'
 import UserCard from '@/components/UserCard'
 import { useSearchParams } from 'next/navigation'
 import toast from 'react-hot-toast'
-import dynamic from 'next/dynamic'
 
-// Dynamic import to ensure this only runs on client-side
-const UsersPageContent = dynamic(() => Promise.resolve(UsersPageComponent), {
-  ssr: false,
-  loading: () => (
-    <DashboardLayout>
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-      </div>
-    </DashboardLayout>
-  )
-})
-
-function UsersPageComponent() {
+export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([])
   const [filteredUsers, setFilteredUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
@@ -48,19 +35,26 @@ function UsersPageComponent() {
       setLoading(true)
       setError(null)
       
+      console.log('Fetching users from Supabase...')
+      
       const { data, error } = await supabaseAdmin
         .from('users')
         .select('*')
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {
+        console.error('Supabase error:', error)
+        throw error
+      }
 
+      console.log('Users fetched successfully:', data?.length || 0)
       setUsers(data || [])
     } catch (error) {
       console.error('Error fetching users:', error)
       const errorMessage = error instanceof Error ? error.message : 'Failed to load users'
       setError(errorMessage)
       toast.error(errorMessage)
+      setUsers([])
     } finally {
       setLoading(false)
     }
@@ -92,6 +86,30 @@ function UsersPageComponent() {
     all: users.length,
     clients: users.filter(u => u.role === 'client').length,
     therapists: users.filter(u => u.role === 'therapist').length,
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <DashboardLayout>
+        <div className="space-y-6">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
+            <p className="text-gray-600">Manage user accounts and their status</p>
+          </div>
+          
+          <div className="text-center py-12">
+            <p className="text-red-600 mb-4">Error loading users: {error}</p>
+            <button 
+              onClick={fetchUsers}
+              className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      </DashboardLayout>
+    )
   }
 
   return (
