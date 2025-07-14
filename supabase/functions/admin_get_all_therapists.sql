@@ -1,5 +1,5 @@
 -- RPC function to get all therapists (pending + approved) with user data for admin dashboard
-CREATE OR REPLACE FUNCTION get_all_therapists()
+CREATE OR REPLACE FUNCTION getadmin_all_therapists()
 RETURNS TABLE (
   therapist_id uuid,
   user_id uuid,
