@@ -8,9 +8,9 @@ Successfully adapted the robust therapist fetching logic for the admin dashboard
 
 ### 1. Created RPC Function for Admin Dashboard
 
-**File**: `supabase/functions/get_all_therapists.sql`
+**File**: `supabase/functions/getadmin_all_therapists.sql`
 
-- Created `get_all_therapists()` function that joins `therapist_profiles` with `users` table
+- Created `getadmin_all_therapists()` function that joins `therapist_profiles` with `users` table
 - Returns all therapists regardless of approval status (for admin management)
 - Provides flattened user data for easier access
 
