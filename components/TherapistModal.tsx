@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { TherapistProfile } from '@/types'
+import { AdminTherapistProfile } from '@/types'
 import { format } from 'date-fns'
 import { 
   XMarkIcon,
@@ -12,7 +12,7 @@ import {
 } from '@heroicons/react/24/outline'
 
 interface TherapistModalProps {
-  therapist: TherapistProfile
+  therapist: AdminTherapistProfile
   isOpen: boolean
   onClose: () => void
   onApprove: (id: string) => void
@@ -114,7 +114,7 @@ const TherapistModal = ({
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Specialties</h3>
               <div className="flex flex-wrap gap-2">
-                {therapist.specialties.map((spec, index) => (
+                {therapist.specialties.map((spec: string, index: number) => (
                   <span
                     key={index}
                     className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
