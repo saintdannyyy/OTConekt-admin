@@ -34,17 +34,52 @@ export default function TherapistsPage() {
   const fetchTherapists = async () => {
     try {
       setLoading(true)
-      console.log('🔄 Fetching therapists for admin dashboard...')
-      
+      console.log('🔄 Starting therapist data fetch at:', new Date().toISOString())
+
+      // STEP 1: Fetch all therapist profiles with user data using SQL JOIN
+      console.log('📋 Fetching therapist profiles with user data via getadmin_all_therapists...')
       const data = await TherapistService.getAllTherapists()
+
+      console.log(`✅ Found ${data?.length || 0} therapist profiles`)
+
+      // Debugging check: Log the raw response
+      if (data && data.length > 0) {
+        console.log('📊 Sample therapist profile response:', JSON.stringify(data[0], null, 2))
+        console.log('🔍 User IDs found:', data.map(p => p.user_id))
+        console.log('🔑 Available fields in response:', Object.keys(data[0]))
+      } else {
+        console.warn('⚠️ No therapist profiles found in database')
+        toast.error('No therapists found in the database')
+        setTherapists([])
+        return
+      }
+
+      // Additional debugging: Check for data integrity
+      const profilesWithMissingData = data.filter(t => 
+        !t.name || t.name === 'Licensed Therapist'
+      )
+
+      if (profilesWithMissingData.length > 0) {
+        console.warn(`⚠️ ${profilesWithMissingData.length} profiles have missing user data`)
+      }
+
       setTherapists(data)
-      
       console.log(`✅ Successfully loaded ${data.length} therapists`)
+      
     } catch (error) {
-      console.error('💥 Error fetching therapists:', error)
-      toast.error('Failed to load therapists')
+      console.error('💥 Critical error loading therapists:', JSON.stringify(error, null, 2))
+
+      // Enhanced error debugging
+      if (error instanceof Error) {
+        console.error('Error message:', error.message)
+        console.error('Error stack:', error.stack)
+      }
+
+      toast.error('Failed to load therapists. Please check your connection and try again.')
+      setTherapists([])
     } finally {
       setLoading(false)
+      console.log('🏁 Therapist data fetch completed')
     }
   }
 
