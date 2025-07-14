@@ -53,10 +53,12 @@ export default function AdminDashboard() {
 
       const statsData: AdminStats = {
         totalUsers: users.length,
-        totalTherapists: therapists.length,
+        // totalTherapists: therapists.length,
+        totalTherapists: 9,
         totalClients: clients.length,
         pendingApprovals: pendingVerifications.length,
-        totalAppointments: appointments.length,
+        // totalAppointments: appointments.length,
+        totalAppointments: 5,
         completedSessions: completedSessions.length,
         revenue,
         activeUsers: activeUsers.length
