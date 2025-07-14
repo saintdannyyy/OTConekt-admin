@@ -9,6 +9,9 @@ import QuickActions from '@/components/QuickActions'
 import RecentActivity from '@/components/RecentActivity'
 import AnalyticsChart from '@/components/AnalyticsChart'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 export default function AdminDashboard() {
   const [stats, setStats] = useState<AdminStats | null>(null)
   const [loading, setLoading] = useState(true)

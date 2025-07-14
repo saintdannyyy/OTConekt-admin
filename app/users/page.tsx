@@ -8,6 +8,9 @@ import UserCard from '@/components/UserCard'
 import { useSearchParams } from 'next/navigation'
 import toast from 'react-hot-toast'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([])
   const [filteredUsers, setFilteredUsers] = useState<User[]>([])

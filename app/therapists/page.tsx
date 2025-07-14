@@ -9,6 +9,9 @@ import TherapistModal from '@/components/TherapistModal'
 import { useSearchParams } from 'next/navigation'
 import toast from 'react-hot-toast'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 export default function TherapistsPage() {
   const [therapists, setTherapists] = useState<AdminTherapistProfile[]>([])
   const [filteredTherapists, setFilteredTherapists] = useState<AdminTherapistProfile[]>([])
