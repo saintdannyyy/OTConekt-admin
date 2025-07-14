@@ -7,13 +7,27 @@ import DashboardLayout from '@/components/DashboardLayout'
 import UserCard from '@/components/UserCard'
 import { useSearchParams } from 'next/navigation'
 import toast from 'react-hot-toast'
+import dynamic from 'next/dynamic'
 
-export default function UsersPage() {
+// Dynamic import to ensure this only runs on client-side
+const UsersPageContent = dynamic(() => Promise.resolve(UsersPageComponent), {
+  ssr: false,
+  loading: () => (
+    <DashboardLayout>
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+      </div>
+    </DashboardLayout>
+  )
+})
+
+function UsersPageComponent() {
   const [users, setUsers] = useState<User[]>([])
   const [filteredUsers, setFilteredUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<'all' | 'clients' | 'therapists'>('all')
   const [searchTerm, setSearchTerm] = useState('')
+  const [error, setError] = useState<string | null>(null)
   
   const searchParams = useSearchParams()
 
@@ -32,6 +46,8 @@ export default function UsersPage() {
   const fetchUsers = async () => {
     try {
       setLoading(true)
+      setError(null)
+      
       const { data, error } = await supabaseAdmin
         .from('users')
         .select('*')
@@ -42,7 +58,9 @@ export default function UsersPage() {
       setUsers(data || [])
     } catch (error) {
       console.error('Error fetching users:', error)
-      toast.error('Failed to load users')
+      const errorMessage = error instanceof Error ? error.message : 'Failed to load users'
+      setError(errorMessage)
+      toast.error(errorMessage)
     } finally {
       setLoading(false)
     }
