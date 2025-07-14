@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { supabaseAdmin } from '@/lib/supabase'
 import { User } from '@/types'
 import DashboardLayout from '@/components/DashboardLayout'
@@ -11,7 +11,7 @@ import toast from 'react-hot-toast'
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
 
-export default function UsersPage() {
+function UsersPageContent() {
   const [users, setUsers] = useState<User[]>([])
   const [filteredUsers, setFilteredUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
@@ -175,5 +175,19 @@ export default function UsersPage() {
         )}
       </div>
     </DashboardLayout>
+  )
+}
+
+export default function UsersPage() {
+  return (
+    <Suspense fallback={
+      <DashboardLayout>
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+        </div>
+      </DashboardLayout>
+    }>
+      <UsersPageContent />
+    </Suspense>
   )
 }
