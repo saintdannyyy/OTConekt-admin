@@ -97,20 +97,20 @@ export default function StatsCards({ stats }: StatsCardsProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
       {statCards.map((card) => {
         const Icon = card.icon
         const value = stats[card.key] as number
         
         return (
-          <div key={card.name} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div key={card.name} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center">
-              <div className={`${card.bgColor} rounded-lg p-3`}>
-                <Icon className={`h-6 w-6 ${card.textColor}`} />
+              <div className={`${card.bgColor} rounded-lg p-2 sm:p-3 flex-shrink-0`}>
+                <Icon className={`h-5 w-5 sm:h-6 sm:w-6 ${card.textColor}`} />
               </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">{card.name}</p>
-                <p className="text-2xl font-bold text-gray-900">
+              <div className="ml-3 sm:ml-4 min-w-0 flex-1">
+                <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">{card.name}</p>
+                <p className="text-lg sm:text-2xl font-bold text-gray-900">
                   {formatValue(value, card.format)}
                 </p>
               </div>

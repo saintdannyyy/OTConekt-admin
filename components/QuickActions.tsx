@@ -70,9 +70,9 @@ const quickActions = [
 
 export default function QuickActions() {
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-6">Quick Actions</h3>
-      <div className="grid grid-cols-1 gap-4">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
+      <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4 sm:mb-6">Quick Actions</h3>
+      <div className="grid grid-cols-1 gap-3 sm:gap-4">
         {quickActions.map((action) => {
           const Icon = action.icon
           
@@ -80,14 +80,14 @@ export default function QuickActions() {
             <Link
               key={action.name}
               href={action.href}
-              className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+              className="flex items-center p-3 sm:p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200"
             >
-              <div className={`${action.bgColor} rounded-lg p-2`}>
-                <Icon className={`h-5 w-5 ${action.textColor}`} />
+              <div className={`${action.bgColor} rounded-lg p-2 flex-shrink-0`}>
+                <Icon className={`h-4 w-4 sm:h-5 sm:w-5 ${action.textColor}`} />
               </div>
-              <div className="ml-4">
-                <h4 className="text-sm font-medium text-gray-900">{action.name}</h4>
-                <p className="text-sm text-gray-600">{action.description}</p>
+              <div className="ml-3 sm:ml-4 min-w-0 flex-1">
+                <h4 className="text-sm font-medium text-gray-900 truncate">{action.name}</h4>
+                <p className="text-xs sm:text-sm text-gray-600 truncate">{action.description}</p>
               </div>
             </Link>
           )

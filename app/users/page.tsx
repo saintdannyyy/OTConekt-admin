@@ -119,22 +119,22 @@ function UsersPageContent() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
-            <p className="text-gray-600">Manage user accounts and their status</p>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">User Management</h1>
+            <p className="text-sm sm:text-base text-gray-600">Manage user accounts and their status</p>
           </div>
         </div>
 
         {/* Filters and Search */}
         <div className="flex flex-col sm:flex-row gap-4">
-          <div className="flex space-x-2 overflow-x-auto">
+          <div className="flex space-x-2 overflow-x-auto pb-2">
             {Object.entries(filterCounts).map(([filterKey, count]) => (
               <button
                 key={filterKey}
                 onClick={() => setFilter(filterKey as any)}
-                className={`px-4 py-2 text-sm rounded-lg transition-colors whitespace-nowrap ${
+                className={`px-3 py-2 text-xs sm:text-sm rounded-lg transition-colors whitespace-nowrap ${
                   filter === filterKey
                     ? 'bg-primary-100 text-primary-700'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -151,7 +151,7 @@ function UsersPageContent() {
               placeholder="Search users..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
           </div>
         </div>
@@ -166,7 +166,7 @@ function UsersPageContent() {
             <p className="text-gray-500">No users found matching your criteria</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {filteredUsers.map((user) => (
               <UserCard
                 key={user.id}

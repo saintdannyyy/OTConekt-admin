@@ -28,75 +28,76 @@ export default function UserCard({ user }: UserCardProps) {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 hover:shadow-md transition-shadow">
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-3 min-w-0 flex-1">
           {user.photo_url ? (
             <img
               src={user.photo_url}
               alt={user.name}
-              className="w-12 h-12 rounded-full object-cover"
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover flex-shrink-0"
             />
           ) : (
-            <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-              <UserIcon className="w-6 h-6 text-gray-400" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <UserIcon className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400" />
             </div>
           )}
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900">{user.name}</h3>
-            <p className="text-sm text-gray-600">{user.email}</p>
+          <div className="min-w-0 flex-1">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate">{user.name}</h3>
+            <p className="text-xs sm:text-sm text-gray-600 truncate">{user.email}</p>
           </div>
         </div>
-        <span className={`status-badge ${getUserTypeColor(user.role)}`}>
+        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium flex-shrink-0 ${getUserTypeColor(user.role)}`}>
           {user.role}
         </span>
       </div>
 
       {/* Details */}
-      <div className="space-y-3 mb-6">
-        <div className="flex items-center text-sm text-gray-600">
-          <EnvelopeIcon className="h-4 w-4 mr-2" />
-          <span>{user.email}</span>
+      <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
+        <div className="flex items-center text-xs sm:text-sm text-gray-600">
+          <EnvelopeIcon className="h-3 w-3 sm:h-4 sm:w-4 mr-2 flex-shrink-0" />
+          <span className="truncate">{user.email}</span>
         </div>
         
         {user.phone && (
-          <div className="flex items-center text-sm text-gray-600">
-            <PhoneIcon className="h-4 w-4 mr-2" />
+          <div className="flex items-center text-xs sm:text-sm text-gray-600">
+            <PhoneIcon className="h-3 w-3 sm:h-4 sm:w-4 mr-2 flex-shrink-0" />
             <span>{user.phone}</span>
           </div>
         )}
         
         {user.location && (
-          <div className="flex items-center text-sm text-gray-600">
-            <MapPinIcon className="h-4 w-4 mr-2" />
-            <span>{user.location}</span>
+          <div className="flex items-center text-xs sm:text-sm text-gray-600">
+            <MapPinIcon className="h-3 w-3 sm:h-4 sm:w-4 mr-2 flex-shrink-0" />
+            <span className="truncate">{user.location}</span>
           </div>
         )}
 
         {user.condition && (
-          <div className="text-sm text-gray-600">
-            <span className="font-medium">Condition:</span> {user.condition}
+          <div className="text-xs sm:text-sm text-gray-600">
+            <span className="font-medium">Condition:</span> <span className="truncate">{user.condition}</span>
           </div>
         )}
 
         {user.specialty && (
-          <div className="text-sm text-gray-600">
-            <span className="font-medium">Specialty:</span> {user.specialty}
+          <div className="text-xs sm:text-sm text-gray-600">
+            <span className="font-medium">Specialty:</span> <span className="truncate">{user.specialty}</span>
           </div>
         )}
       </div>
 
       {/* Actions */}
       <div className="flex space-x-2">
-        <button className="flex-1 flex items-center justify-center px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
-          <EyeIcon className="h-4 w-4 mr-1" />
-          View Profile
+        <button className="flex-1 flex items-center justify-center px-2 py-2 sm:px-3 border border-gray-300 rounded-lg text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+          <EyeIcon className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+          <span className="hidden sm:inline">View Profile</span>
+          <span className="sm:hidden">View</span>
         </button>
       </div>
 
       {/* Timestamps */}
-      <div className="mt-4 pt-4 border-t border-gray-200">
+      <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-200">
         <div className="text-xs text-gray-500">
           <span className="font-medium">Joined:</span> {format(new Date(user.created_at), 'MMM d, yyyy')}
         </div>
