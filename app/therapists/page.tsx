@@ -1,154 +1,179 @@
-'use client'
+"use client";
 
-import React, { useState, useEffect, Suspense } from 'react'
-import { AdminTherapistProfile } from '@/types'
-import { TherapistService } from '@/lib/therapist-service'
-import DashboardLayout from '@/components/DashboardLayout'
-import TherapistCard from '@/components/TherapistCard'
-import TherapistModal from '@/components/TherapistModal'
-import { useSearchParams } from 'next/navigation'
-import toast from 'react-hot-toast'
+import React, { useState, useEffect, Suspense } from "react";
+import { AdminTherapistProfile } from "@/types";
+import { TherapistService } from "@/lib/therapist-service";
+import DashboardLayout from "@/components/DashboardLayout";
+import TherapistCard from "@/components/TherapistCard";
+import TherapistModal from "@/components/TherapistModal";
+import { useSearchParams } from "next/navigation";
+import toast from "react-hot-toast";
 
 // Force dynamic rendering
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 function TherapistsPageContent() {
-  const [therapists, setTherapists] = useState<AdminTherapistProfile[]>([])
-  const [filteredTherapists, setFilteredTherapists] = useState<AdminTherapistProfile[]>([])
-  const [loading, setLoading] = useState(true)
-  const [selectedTherapist, setSelectedTherapist] = useState<AdminTherapistProfile | null>(null)
-  const [filter, setFilter] = useState<'all' | 'pending' | 'approved'>('all')
-  const [searchTerm, setSearchTerm] = useState('')
-  
-  const searchParams = useSearchParams()
+  const [therapists, setTherapists] = useState<AdminTherapistProfile[]>([]);
+  const [filteredTherapists, setFilteredTherapists] = useState<
+    AdminTherapistProfile[]
+  >([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedTherapist, setSelectedTherapist] =
+    useState<AdminTherapistProfile | null>(null);
+  const [filter, setFilter] = useState<"all" | "pending" | "approved">("all");
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    const filterParam = searchParams.get('filter')
-    if (filterParam && ['pending', 'approved'].includes(filterParam)) {
-      setFilter(filterParam as any)
+    const filterParam = searchParams.get("filter");
+    if (filterParam && ["pending", "approved"].includes(filterParam)) {
+      setFilter(filterParam as any);
     }
-    fetchTherapists()
-  }, [searchParams])
+    fetchTherapists();
+  }, [searchParams]);
 
   useEffect(() => {
-    filterTherapists()
-  }, [therapists, filter, searchTerm])
+    filterTherapists();
+  }, [therapists, filter, searchTerm]);
 
   const fetchTherapists = async () => {
     try {
-      setLoading(true)
-      console.log('🔄 Starting therapist data fetch at:', new Date().toISOString())
+      setLoading(true);
+      console.log(
+        "🔄 Starting therapist data fetch at:",
+        new Date().toISOString()
+      );
 
       // STEP 1: Fetch all therapist profiles with user data using SQL JOIN
-      console.log('📋 Fetching therapist profiles with user data via getadmin_all_therapists...')
-      const data = await TherapistService.getAllTherapists()
+      console.log(
+        "📋 Fetching therapist profiles with user data via getadmin_all_therapists..."
+      );
+      const data = await TherapistService.getAllTherapists();
 
-      console.log(`✅ Found ${data?.length || 0} therapist profiles`)
+      console.log(`✅ Found ${data?.length || 0} therapist profiles`);
 
       // Debugging check: Log the raw response
       if (data && data.length > 0) {
-        console.log('📊 Sample therapist profile response:', JSON.stringify(data[0], null, 2))
-        console.log('🔍 User IDs found:', data.map(p => p.user_id))
-        console.log('🔑 Available fields in response:', Object.keys(data[0]))
+        console.log(
+          "📊 Sample therapist profile response:",
+          JSON.stringify(data[0], null, 2)
+        );
+        console.log(
+          "🔍 User IDs found:",
+          data.map((p) => p.user_id)
+        );
+        console.log("🔑 Available fields in response:", Object.keys(data[0]));
       } else {
-        console.warn('⚠️ No therapist profiles found in database')
-        toast.error('No therapists found in the database')
-        setTherapists([])
-        return
+        console.warn("⚠️ No therapist profiles found in database");
+        toast.error("No therapists found in the database");
+        setTherapists([]);
+        return;
       }
 
       // Additional debugging: Check for data integrity
-      const profilesWithMissingData = data.filter(t => 
-        !t.name || t.name === 'Licensed Therapist'
-      )
+      const profilesWithMissingData = data.filter(
+        (t) => !t.name || t.name === "Licensed Therapist"
+      );
 
       if (profilesWithMissingData.length > 0) {
-        console.warn(`⚠️ ${profilesWithMissingData.length} profiles have missing user data`)
+        console.warn(
+          `⚠️ ${profilesWithMissingData.length} profiles have missing user data`
+        );
       }
 
-      setTherapists(data)
-      console.log(`✅ Successfully loaded ${data.length} therapists`)
-      
+      setTherapists(data);
+      console.log(`✅ Successfully loaded ${data.length} therapists`);
     } catch (error) {
-      console.error('💥 Critical error loading therapists:', JSON.stringify(error, null, 2))
+      console.error(
+        "💥 Critical error loading therapists:",
+        JSON.stringify(error, null, 2)
+      );
 
       // Enhanced error debugging
       if (error instanceof Error) {
-        console.error('Error message:', error.message)
-        console.error('Error stack:', error.stack)
+        console.error("Error message:", error.message);
+        console.error("Error stack:", error.stack);
       }
 
-      toast.error('Failed to load therapists. Please check your connection and try again.')
-      setTherapists([])
+      toast.error(
+        "Failed to load therapists. Please check your connection and try again."
+      );
+      setTherapists([]);
     } finally {
-      setLoading(false)
-      console.log('🏁 Therapist data fetch completed')
+      setLoading(false);
+      console.log("🏁 Therapist data fetch completed");
     }
-  }
+  };
 
   const filterTherapists = () => {
-    let filtered = therapists
+    let filtered = therapists;
 
-    if (filter === 'pending') {
-      filtered = filtered.filter(therapist => !therapist.is_approved)
-    } else if (filter === 'approved') {
-      filtered = filtered.filter(therapist => therapist.is_approved)
+    if (filter === "pending") {
+      filtered = filtered.filter((therapist) => !therapist.is_approved);
+    } else if (filter === "approved") {
+      filtered = filtered.filter((therapist) => therapist.is_approved);
     }
 
     if (searchTerm) {
-      filtered = filtered.filter(therapist =>
-        therapist.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        therapist.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        therapist.specialties.some((spec: string) => 
-          spec.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      )
+      filtered = filtered.filter(
+        (therapist) =>
+          therapist.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          therapist.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          therapist.specialties.some((spec: string) =>
+            spec.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+      );
     }
 
-    setFilteredTherapists(filtered)
-  }
+    setFilteredTherapists(filtered);
+  };
 
   const handleApprove = async (therapistId: string) => {
     try {
-      console.log(`✅ Approving therapist: ${therapistId}`)
-      await TherapistService.approveTherapist(therapistId)
-      
-      toast.success('Therapist approved successfully')
-      await fetchTherapists()
-      setSelectedTherapist(null)
+      console.log(`✅ Approving therapist: ${therapistId}`);
+      await TherapistService.approveTherapist(therapistId);
+
+      toast.success("Therapist approved successfully");
+      await fetchTherapists();
+      setSelectedTherapist(null);
     } catch (error) {
-      console.error('💥 Error approving therapist:', error)
-      toast.error('Failed to approve therapist')
+      console.error("💥 Error approving therapist:", error);
+      toast.error("Failed to approve therapist");
     }
-  }
+  };
 
   const handleReject = async (therapistId: string) => {
     try {
-      console.log(`❌ Rejecting therapist: ${therapistId}`)
-      await TherapistService.rejectTherapist(therapistId)
-      
-      toast.success('Therapist rejected')
-      await fetchTherapists()
-      setSelectedTherapist(null)
+      console.log(`❌ Rejecting therapist: ${therapistId}`);
+      await TherapistService.rejectTherapist(therapistId);
+
+      toast.success("Therapist rejected");
+      await fetchTherapists();
+      setSelectedTherapist(null);
     } catch (error) {
-      console.error('💥 Error rejecting therapist:', error)
-      toast.error('Failed to reject therapist')
+      console.error("💥 Error rejecting therapist:", error);
+      toast.error("Failed to reject therapist");
     }
-  }
+  };
 
   const filterCounts = {
     all: therapists.length,
-    pending: therapists.filter(t => !t.is_approved).length,
-    approved: therapists.filter(t => t.is_approved).length,
-  }
+    pending: therapists.filter((t) => !t.is_approved).length,
+    approved: therapists.filter((t) => t.is_approved).length,
+  };
 
   return (
     <DashboardLayout>
       <div className="space-y-4 sm:space-y-6">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Therapist Management</h1>
-            <p className="text-sm sm:text-base text-gray-600">Review and manage therapist profiles and verifications</p>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
+              Therapist Management
+            </h1>
+            <p className="text-sm sm:text-base text-gray-600">
+              Review and manage therapist profiles and verifications
+            </p>
           </div>
         </div>
 
@@ -161,15 +186,16 @@ function TherapistsPageContent() {
                 onClick={() => setFilter(filterKey as any)}
                 className={`px-3 py-2 text-xs sm:text-sm rounded-lg transition-colors whitespace-nowrap ${
                   filter === filterKey
-                    ? 'bg-primary-100 text-primary-700'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    ? "bg-primary-100 text-primary-700"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                 }`}
               >
-                {filterKey.charAt(0).toUpperCase() + filterKey.slice(1)} ({count})
+                {filterKey.charAt(0).toUpperCase() + filterKey.slice(1)} (
+                {count})
               </button>
             ))}
           </div>
-          
+
           <div className="flex-1 max-w-md">
             <input
               type="text"
@@ -188,18 +214,24 @@ function TherapistsPageContent() {
           </div>
         ) : filteredTherapists.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500">No therapists found matching your criteria</p>
+            <p className="text-gray-500">
+              No therapists found matching your criteria
+            </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+          <div className="flex flex-wrap gap-4 sm:gap-6">
             {filteredTherapists.map((therapist) => (
-              <TherapistCard
+              <div
                 key={therapist.id}
-                therapist={therapist}
-                onView={() => setSelectedTherapist(therapist)}
-                onApprove={() => handleApprove(therapist.id)}
-                onReject={() => handleReject(therapist.id)}
-              />
+                className="flex-grow min-w-[280px] max-w-sm"
+              >
+                <TherapistCard
+                  therapist={therapist}
+                  onView={() => setSelectedTherapist(therapist)}
+                  onApprove={() => handleApprove(therapist.id)}
+                  onReject={() => handleReject(therapist.id)}
+                />
+              </div>
             ))}
           </div>
         )}
@@ -216,19 +248,21 @@ function TherapistsPageContent() {
         )}
       </div>
     </DashboardLayout>
-  )
+  );
 }
 
 export default function TherapistsPage() {
   return (
-    <Suspense fallback={
-      <DashboardLayout>
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-        </div>
-      </DashboardLayout>
-    }>
+    <Suspense
+      fallback={
+        <DashboardLayout>
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+          </div>
+        </DashboardLayout>
+      }
+    >
       <TherapistsPageContent />
     </Suspense>
-  )
+  );
 }
