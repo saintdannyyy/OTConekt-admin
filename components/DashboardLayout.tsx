@@ -1,37 +1,37 @@
-'use client'
+"use client";
 
-import React, { useState } from 'react'
-import { 
-  HomeIcon, 
-  UserGroupIcon, 
-  UserIcon, 
+import React, { useState } from "react";
+import {
+  HomeIcon,
+  UserGroupIcon,
+  UserIcon,
   CalendarIcon,
   ChartBarIcon,
   CogIcon,
   ArrowRightOnRectangleIcon,
   Bars3Icon,
-  XMarkIcon
-} from '@heroicons/react/24/outline'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import clsx from 'clsx'
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import clsx from "clsx";
 
 const navigation = [
-  { name: 'Dashboard', href: '/', icon: HomeIcon },
-  { name: 'Therapists', href: '/therapists', icon: UserGroupIcon },
-  { name: 'Users', href: '/users', icon: UserIcon },
-  { name: 'Appointments', href: '/appointments', icon: CalendarIcon },
-  { name: 'Analytics', href: '/analytics', icon: ChartBarIcon },
-  { name: 'Settings', href: '/settings', icon: CogIcon },
-]
+  { name: "Dashboard", href: "/", icon: HomeIcon },
+  { name: "Therapists", href: "/therapists", icon: UserGroupIcon },
+  { name: "Users", href: "/users", icon: UserIcon },
+  { name: "Appointments", href: "/appointments", icon: CalendarIcon },
+  // { name: 'Analytics', href: '/analytics', icon: ChartBarIcon },
+  // { name: "Settings", href: "/settings", icon: CogIcon },
+];
 
 interface DashboardLayoutProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  const pathname = usePathname()
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const pathname = usePathname();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const SidebarContent = () => (
     <>
@@ -43,28 +43,30 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Navigation */}
       <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
         {navigation.map((item) => {
-          const isActive = pathname === item.href
+          const isActive = pathname === item.href;
           return (
             <Link
               key={item.name}
               href={item.href}
               onClick={() => setSidebarOpen(false)} // Close mobile sidebar on navigation
               className={clsx(
-                'group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors',
+                "group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors",
                 isActive
-                  ? 'bg-primary-50 text-primary-700 border-r-2 border-primary-600'
-                  : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+                  ? "bg-primary-50 text-primary-700 border-r-2 border-primary-600"
+                  : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
               )}
             >
               <item.icon
                 className={clsx(
-                  'mr-3 h-5 w-5 flex-shrink-0',
-                  isActive ? 'text-primary-600' : 'text-gray-400 group-hover:text-gray-500'
+                  "mr-3 h-5 w-5 flex-shrink-0",
+                  isActive
+                    ? "text-primary-600"
+                    : "text-gray-400 group-hover:text-gray-500"
                 )}
               />
               {item.name}
             </Link>
-          )
+          );
         })}
       </nav>
 
@@ -77,7 +79,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             </div>
           </div>
           <div className="ml-3 flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-700 truncate">Admin User</p>
+            <p className="text-sm font-medium text-gray-700 truncate">
+              Admin User
+            </p>
             <p className="text-xs text-gray-500 truncate">admin@otconekt.com</p>
           </div>
           <button className="ml-2 text-gray-400 hover:text-gray-600 flex-shrink-0">
@@ -86,13 +90,13 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         </div>
       </div>
     </>
-  )
+  );
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         >
@@ -101,14 +105,18 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       )}
 
       {/* Mobile sidebar */}
-      <div className={clsx(
-        'fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out lg:hidden',
-        sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-      )}>
+      <div
+        className={clsx(
+          "fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out lg:hidden",
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        )}
+      >
         <div className="flex flex-col h-full">
           {/* Mobile close button */}
           <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
-            <h1 className="text-xl font-bold text-primary-600">OTConekt Admin</h1>
+            <h1 className="text-xl font-bold text-primary-600">
+              OTConekt Admin
+            </h1>
             <button
               onClick={() => setSidebarOpen(false)}
               className="p-2 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100"
@@ -116,7 +124,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               <XMarkIcon className="h-6 w-6" />
             </button>
           </div>
-          
+
           <SidebarContent />
         </div>
       </div>
@@ -140,19 +148,19 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             <span className="sr-only">Open sidebar</span>
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
           </button>
-          
+
           <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
             <div className="flex items-center">
-              <h1 className="text-lg font-semibold text-gray-900">OTConekt Admin</h1>
+              <h1 className="text-lg font-semibold text-gray-900">
+                OTConekt Admin
+              </h1>
             </div>
           </div>
         </div>
 
         {/* Page content */}
-        <main className="p-4 sm:p-6 lg:p-8">
-          {children}
-        </main>
+        <main className="p-4 sm:p-6 lg:p-8">{children}</main>
       </div>
     </div>
-  )
+  );
 }
