@@ -20,22 +20,30 @@ import { Suspense } from "react";
 export const dynamic = "force-dynamic";
 
 function AppointmentsPageContent() {
+  // State for all appointments
   const [appointments, setAppointments] = useState<any[]>([]);
+  // State for filtered appointments
   const [filteredAppointments, setFilteredAppointments] = useState<any[]>([]);
+  // Loading state
   const [loading, setLoading] = useState(true);
+  // Search term for filtering
   const [searchTerm, setSearchTerm] = useState("");
+  // Status filter
   const [statusFilter, setStatusFilter] = useState<
     "all" | "booked" | "completed" | "cancelled" | "no_show"
   >("all");
 
+  // Fetch all appointments on mount
   useEffect(() => {
     fetchAll();
   }, []);
 
+  // Filter appointments when dependencies change
   useEffect(() => {
     filterAppointments();
   }, [appointments, searchTerm, statusFilter]);
 
+  // Fetch all appointments from Supabase
   const fetchAll = async () => {
     try {
       setLoading(true);
@@ -49,6 +57,7 @@ function AppointmentsPageContent() {
     }
   };
 
+  // Filter appointments by status and search term
   const filterAppointments = () => {
     let filtered = appointments;
     if (statusFilter !== "all") {
@@ -72,6 +81,7 @@ function AppointmentsPageContent() {
     setFilteredAppointments(filtered);
   };
 
+  // Count for each status
   const statusCounts = {
     all: appointments.length,
     booked: appointments.filter((a) => a.status === "booked").length,
